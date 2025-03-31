@@ -1,0 +1,6 @@
+aiohttp~=3.11.14
+aiohttp_socks~=0.10.1
+cryptography~=44.0.2
+paramiko~=3.5.1
+requests~=2.32.3
+qiniu~=7.16.0

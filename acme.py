@@ -581,8 +581,7 @@ if __name__ == "__main__":
     # Enable GTS: https://console.cloud.google.com/apis/library/publicca.googleapis.com
     # GTS HMAC KEY: gcloud publicca external-account-keys create
     ## gcloud config set project <project-name>; gcloud services enable publicca.googleapis.com
-
-    import argparse
+    import argparse, os
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', dest='domain', type=str, help='domains with comma separated.')
     parser.add_argument('-v', dest="verify", type=str, default="dns", help='http, dns.')
@@ -598,7 +597,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     loop = asyncio.get_event_loop()
-    acme = ACME(domain=args.domain, sub=args.sub, verify=args.verify, server=args.server, rootData=args.data, ecc=args.ecc, proxy=args.proxy, **{"key": None, "secret": None})
+    # 从.env文件中获取
+    key = os.getenv("HW_KEY")
+    secret = os.getenv("HW_SECRET")
+    
+    acme = ACME(domain=args.domain, sub=args.sub, verify=args.verify, server=args.server, rootData=args.data, ecc=args.ecc, proxy=args.proxy, **{"key": key, "secret": secret})
     if args.register is True:
         status = loop.run_until_complete(acme.Account(mail=args.mail, kid=args.kid, hmacKey=args.key))
         print("Register Status: {}".format(status))
